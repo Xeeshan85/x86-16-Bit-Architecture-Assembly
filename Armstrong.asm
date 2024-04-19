@@ -1,3 +1,7 @@
+A procedure that takes an integer from the user and checks whether the input number is
+Armstrong or not. (Input range up to 500). An Armstrong number is an n-digit number that is
+equal to the sum of the nth powers of its digits. 3*3*3+7*7*7+1*1*1= 371.
+
 .model small
 .stack 0100h
 .data
