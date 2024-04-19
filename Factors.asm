@@ -8,7 +8,7 @@
 .stack 0100h
 .data
     digitCount db 0 
-    enteredNumber dw 0
+    enteredNumber dw 0 
     temp1 dw 0
     counter db 0
     FactorCounter db 0
