@@ -1,3 +1,15 @@
+; A program that displays the following output. If n = 5 then: (15)
+; 
+;     1            *
+;    212          ***
+;   32123        *****
+;  4321234      *******
+; 543212345    *********
+;  4321234      *******
+;   32123        *****
+;    212          ***
+;     1            *
+
 .model small
 .stack 100h
 
@@ -11,10 +23,12 @@ MAIN PROC
     mov ax, @data
     mov ds, ax
     lea ax, n
-    ; Take input for row count
+
+    ; Print the input String
     lea dx, str1
     Mov ah, 9
     Int 21h
+    ; Take input for the row Count
     mov ah, 1
     int 21h
     mov ah, 0
@@ -42,6 +56,7 @@ MAIN PROC
             inc si
             jmp InnerLoop1
 
+        ; Print upper Left Half of first triangle
         Inner2:
         mov cx, bx ; j = i
         InnerLoop2:
@@ -49,6 +64,7 @@ MAIN PROC
             call PRINTNUMBER
             loop InnerLoop2
 
+        ; Print upper Right Half of first triangle
         mov si, 2 ;j = 2
         InnerLoop3:
             cmp si, bx
@@ -58,8 +74,8 @@ MAIN PROC
             inc si
             jmp InnerLoop3
 
+        ; Print Middle spaces b/w two triangles
         Inner4:
-        
         mov si, 0
         mov ax, n
         mov dx, 2
@@ -73,12 +89,14 @@ MAIN PROC
             inc si
             jmp InnerLoop4
 
+        ; Print upper Left Half of Second triangle
         Inner5:
         mov cx, bx
         InnerLoop5:
             call STAR
             loop InnerLoop5
 
+        ; Print upper Right Half of Second triangle
         mov si, 2
         InnerLoop6:
             cmp si, bx
@@ -93,8 +111,9 @@ MAIN PROC
         jmp OuterLoop1
 ;------------------------------------------
     Outer:
-    lea ax, n
-    lea dx, temp
+        lea ax, n
+        lea dx, temp
+
     ; Lower Triangles
     mov bx, n ; i = 1
     dec bx
