@@ -1,3 +1,9 @@
+; A program to find the factors of a given number. Main procedure asks the user to input
+; a number. The input number is in range between 1 to 100. Now the number is passed to the
+; procedure named Factors. Factors are stored in the stack. The procedure named
+; OutputFactors will print all factors of given number.
+
+
 .model small
 .stack 0100h
 .data
@@ -14,43 +20,45 @@ MAIN PROC
     mov ax, @data
     mov ds, ax
     MAIN1:
-    mov ax, 0
-    mov ah,09h
-    lea dx, inputStr
-    int 21h
-
-    ;input multidigit number
-    input:
-        mov ah,01h
+        mov ax, 0
+        ; Print the Input string
+        mov ah,09h
+        lea dx, inputStr
         int 21h
-        cmp al,13 ;Stop taking input if user presses Enter key
-        je stopIt
-        sub al,48
-        mov ah,0
-        mov temp1, ax 
-        mov ax,0
-        mov ax,enteredNumber
-        mov bx,10
-        mul bx
-        add ax,temp1
-        mov enteredNumber,ax ; Store Number in Variable 
-        inc digitCount ; Count Number of Digits
-        jmp input
-
-    stopIt:
-        cmp enteredNumber, 1
-        jl invalid_input
-        cmp enteredNumber, 100
-        jg invalid_input
-        call FACTORS
-        jmp EXIT
     
-    invalid_input:
-        mov ah, 09h
-        lea dx, invalid_msg
-        int 21h
-        call NEWLINE
-        jmp MAIN1
+        ;input multidigit number
+        input:
+            mov ah,01h
+            int 21h
+            cmp al,13 ;Stop taking input if user presses Enter key
+            je stopIt
+            sub al,48
+            mov ah,0
+            mov temp1, ax 
+            mov ax,0
+            mov ax,enteredNumber
+            mov bx,10
+            mul bx
+            add ax,temp1
+            mov enteredNumber,ax ; Store Number in Variable 
+            inc digitCount ; Count Number of Digits
+            jmp input
+    
+        stopIt: 
+            ; Validation Condition should be in range between 1-100
+            cmp enteredNumber, 1
+            jl invalid_input
+            cmp enteredNumber, 100
+            jg invalid_input
+            call FACTORS
+            jmp EXIT
+        
+        invalid_input:
+            mov ah, 09h
+            lea dx, invalid_msg
+            int 21h
+            call NEWLINE
+            jmp MAIN1
 
     EXIT:
         mov ah, 4ch
@@ -66,10 +74,10 @@ FACTORS PROC
 
         mov dx, 0
         mov ax, enteredNumber
-        div si
-        cmp dx, 0
+        div si ; Number % factor
+        cmp dx, 0 ; if the remainder is zero then its a factor
         jne NotAFactor
-        push si ; store factor
+        push si ; store factor into a stack
         inc FactorCounter
 
         NotAFactor:
