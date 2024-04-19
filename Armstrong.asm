@@ -16,45 +16,48 @@ MAIN PROC
     mov ax, @data
     mov ds, ax
     MAIN1:
-    mov ax, 0
-    mov ah,09h
-    lea dx, inputStr
-    int 21h
-
-    ;input multidigit number
-    input:
-        mov ah,01h
+        mov ax, 0
+        ; Print the input String
+        mov ah,09h
+        lea dx, inputStr
         int 21h
-        cmp al,13 ;Stop taking input if user presses Enter key
-        je stopIt
-        sub al,48
-        mov ah,0
-        mov temp1, ax 
-        mov ax,0
-        mov ax,enteredNumber
-        mov bx,10
-        mul bx
-        add ax,temp1
-        mov enteredNumber,ax ; Store Number in Variable 
-        inc digitCount ; Count Number of Digits
-        jmp input
-
-    stopIt:
-        cmp enteredNumber, 1
-        jl invalid_input
-        cmp enteredNumber, 500
-        jg invalid_input
-
-        call IsARMSTRONG
-        
-        jmp EXIT
     
-    invalid_input:
-        mov ah, 09h
-        lea dx, invalid_msg
-        int 21h
-        call NEWLINE
-        jmp MAIN1
+        ;input multidigit number
+        input:
+            mov ah,01h
+            int 21h
+            cmp al,13 ;Stop taking input if user presses Enter key
+            je stopIt
+            sub al,48
+            mov ah,0
+            mov temp1, ax 
+            mov ax,0
+            mov ax,enteredNumber
+            mov bx,10
+            mul bx
+            add ax,temp1
+            mov enteredNumber,ax ; Store Number in Variable 
+            inc digitCount ; Count Number of Digits
+            jmp input
+    
+        stopIt:
+            ; Validation conditions (1 < n < 500)
+            cmp enteredNumber, 1
+            jl invalid_input
+            cmp enteredNumber, 500
+            jg invalid_input
+    
+            call IsARMSTRONG
+            
+            jmp EXIT
+        
+        invalid_input:
+            ; Print Invalid Input Message
+            mov ah, 09h
+            lea dx, invalid_msg
+            int 21h
+            call NEWLINE
+            jmp MAIN1
 
     EXIT:
         mov ah, 4ch
@@ -62,27 +65,28 @@ MAIN PROC
 MAIN ENDP
 
 IsARMSTRONG PROC
-    mov  si, 0
     mov counter, 0
+    mov ax, enteredNumber
+    mov  si, 1
     ArmLoop:  
         cmp si, digitCount
-        ja exitArm
+        ja L1
         mov  dx, 0
         mov  bx, 10
-        div  bx
-        add  dx, '0'
-        push dx
+        div  bx ; n % 10 = Last Digit
+        push dx ; Push into stack
         inc counter
         inc si
         jmp ArmLoop
 
-    exitArm:
-    L1:
+    L1: ; Pop the number and take number^(no.of digits in entered number)
         cmp counter, 0
         je exitL1
         pop ax
+        mov temp1, ax
         mov di, 1
         InnerLoop:
+            mov dx, temp1
             cmp di, digitCount
             jae ExitInner
             MUL dx ; x=x^n
@@ -98,7 +102,7 @@ IsARMSTRONG PROC
     exitL1:
         mov ax, ArmSum
         cmp ax, enteredNumber
-        je L2
+        je L2 ; Jump if Armstrong else:
         mov ah, 09h
         lea dx, NotArmstrongStr
         int 21h
