@@ -1,3 +1,8 @@
+; An assembly program to reverse a dw number (var dw 1234). The program also finds the
+; sum of digits in that integer number. The sum and reverse number is stored in a separate variable.
+; For Example, if the number is 1234, its reverse will be 4321 and sum=10 
+
+
 .model small
 .stack 100h
 
@@ -15,16 +20,15 @@ main proc
     mov ax, @Data
     mov ds, ax
 
-    mov cx, 4
+    mov cx, 4 ; Loop Counter
     mov ax, Number
     mov si, Offset ReverseNum
-
     reverseLoop:  
         mov  dx, 0
         mov  bx, 10
         div  bx
         add  dx, '0'
-        mov  [si], dx
+        mov  [si], dx 
         add  sum, dx
         inc  si
         loop reverseLoop
