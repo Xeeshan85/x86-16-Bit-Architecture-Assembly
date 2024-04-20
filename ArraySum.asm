@@ -1,11 +1,19 @@
+
+; An assembly language program that takes 2 arrays of size n (size is declared
+; generically in .data) the entries are added in such a way that 1st index of one array adds to the last
+; index of the second array, 2nd index of the first array adds to the second last index of the other array,
+; and so on. The added numbers are saved in a third array.
+
+
 .model small
 .stack 100h
 
 .data
-    n equ 2 ; Size of Array
+    n equ 5 ; Initialize the Size of Arrays
     array1 dw n dup(?)
     array2 dw n dup(?)
     ResultArray dw n dup(?)
+
     digitCount db 0 
     enteredNumber dw 0
     temp1 dw 0
@@ -20,10 +28,9 @@ MAIN PROC
     mov ax, @data
     mov ds, ax
 
-    lea si, ResultArray
     lea si, array1
     mov di, 0
-    ArrInput1:
+    ArrInput1: ; Input elements for the first Array
         cmp di, n
         jae ExitLoop1
         call INPUTELEMENT
@@ -36,8 +43,8 @@ MAIN PROC
     call NEWLINE
     ExitLoop1:
     lea si, array2
-    mov di, 0
-    ArrInput2:
+    mov di, 0 ; Counter to keep track of size for loop
+    ArrInput2: ; Input Elements for the second Array
         cmp di, n
         jae ExitLoop2
         call INPUTELEMENT
@@ -49,14 +56,14 @@ MAIN PROC
 
     ExitLoop2:
 
-    mov si, n
+    mov si, n ; End Index
     dec si
-    mov di, 0
+    mov di, 0 ; Start index
     lea bx, ResultArray
-    AddLoop:
+    AddLoop: ; Addition Logic
         cmp di, n
         jae Exit
-        mov ax, word ptr [array1 + si]
+        mov ax, word ptr [array1 + si] 
         mov dx, word ptr [array2 + di]
         
         add ax, dx
@@ -73,15 +80,18 @@ MAIN PROC
 MAIN ENDP
 
 INPUTELEMENT PROC
+    ; Print input String
     mov ah,09h
     lea dx, inputStr1
     int 21h
 
+    ; Print the number of element being input
     mov dx, di
     add dl, 30h
     mov ah, 2
     int 21h
     call COLON
+
     mov enteredNumber, 0
     input:
         mov ah,01h
