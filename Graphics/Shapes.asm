@@ -1,3 +1,12 @@
+; The Following assembly code draws outline of the following shapes on the screen:
+; a. Square
+; b. Rectangle
+; c. Triangle
+; d. Pentagon
+; e. Hexagon
+; f. Octagon
+
+
 .model small
 .stack 100h
 
