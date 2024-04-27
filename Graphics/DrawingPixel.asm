@@ -1,3 +1,7 @@
+; Using keyboard interfacing interrupt to draw pixels as you
+; press the up, down, left, and right arrow keys.
+
+
 .model small
 .stack 100h
 .data
